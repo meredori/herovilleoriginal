@@ -30,7 +30,7 @@
     $scope.goldMulti = 1;
 
     //Display Variables
-    $scope.version = '1.1.1';
+    $scope.version = '1.2';
     $scope.optionsSuccess = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     $scope.optionsLoss = [1, 2, 3, 4];
     $scope.sorting = {
@@ -166,6 +166,16 @@
                 cost: 35000,
                 multiplier: 5,
                 description: "Allows parties to adventure into elite dungeons."
+            },
+            {
+                id: 9,
+                name: 'Work Hut',
+                count: 0,
+                enabled: false,
+                teir: 1,
+                cost: 100,
+                multiplier: 4,
+                description: "Allows you to train workers and gatherers."
             }
     ]
 
@@ -212,15 +222,11 @@
         },
         {
             id: 5,
-            name: 'Academy Blueprint',
-            cost: 25,
-            buildingID: 7,
-            enabled: false,
-            description: "Allows heroes to be trained into a class"
+            name: '',
         },
         {
             id: 6,
-            name: ''
+            name: '',
         },
         {
             id: 7,
@@ -811,6 +817,7 @@
                 case 4: {
                     $scope.buildings[4].enabled = false;
                     $scope.upgEnabled = false;
+                    $scope.buildings[9].enabled = true;
 
                     if ($scope.panelNumber == 19) {
                         $scope.nextTutorial();
@@ -841,6 +848,9 @@
                     //Build Bestiary
                 case 7: {
                     $scope.buildings[7].enabled = false;
+                }
+                case 9: {
+                    $("#dialog2").dialog("open");
                 }
             }
 
@@ -960,11 +970,9 @@
     }
 
     $scope.heroProfession = function (selectedJobID, heroID) {
-        if ($scope.heroList[heroID].job.id > 1) {
-            $scope.heroList[heroID].job.current--;
-        }
+        
 
-        if ($scope.jobs[selectedJobID].current < $scope.jobs[selectedJobID].limit) {
+        if ($scope.heroList.filter((hero) => hero.job.id == selectedJobID).length < $scope.jobs[selectedJobID].limit) {
             $scope.jobs[selectedJobID].current++;
             $scope.heroList[heroID].progress = "Idle";
             switch (selectedJobID) {
@@ -1043,7 +1051,7 @@
                 break;
             }
             case 1: {
-                $scope.panel = ["To start off you need to begin by gathering the initial resources so that you can build a Tent to attract your first hero. Click the 'Gather' button until you have enough resources to buy a tent. (10 resources)"];
+                $scope.panel = ["To start off you need to begin by gathering the initial resources so that you can build a Tent to attract your first hero. Click the 'Gather' button until you have enough resources to buy a tent. (5 resources)"];
                 $scope.panelNumber++;
                 $scope.showTutorial = false;
                 break;
@@ -1120,7 +1128,7 @@
                 break;
             }
             case 15: {
-                $scope.panel = ["The Blacksmith unlocks weapons for your hero to purchase, head over to the 'Production' tab and you should see the 'Dagger' is now available. Gather the required 30 resources and click 'Create Dagger'."];
+                $scope.panel = ["The Blacksmith unlocks weapons for your hero to purchase, head over to the 'Production' tab and you should see the 'Dagger' is now available. Gather the required 15 resources and click 'Create Dagger'."];
                 $scope.panelNumber++;
                 break;
             }
@@ -1257,7 +1265,7 @@
                         hero.location = $scope.dungeons[hero.dungeon].name;
                     }
                     else if(hero.progress == 'Idle'){
-                        $scope.incrRes(Math.ceil($scope.heroList[i].level / 4));
+                        $scope.incrRes(Math.ceil($scope.heroList[i].level / 4)^2);
                     }
                     
                 
@@ -1346,7 +1354,7 @@
             hero.health += 50;
             hero.experience = 0;
             if (hero.level >= 10 && $scope.buildings[7].count == 0) {
-                $scope.activateBlueprint(5);
+               // $scope.activateBlueprint(5);
             }
         }
     }
@@ -1453,6 +1461,53 @@
             }
         }
     });
+$(document).ready(function(){
+    $("#paypal").click( function() {
+        ga('send', 'event', 'Clicks', 'Paypal');
+});
+
+   $("#reddit").click( function() {
+        ga('send', 'event', 'Clicks', 'Reddit');
+});
+
+   $("#patreon").click( function() {
+        ga('send', 'event', 'Clicks', 'Patreon');
+});
+});
+
+
+    $("#dialog2").dialog({
+        closeOnEscape: false,
+        open: function (event, ui) {
+            $(".ui-dialog-titlebar-close", ui.dialog || ui).hide();
+            $("#name2").val($scope.newHeroName());
+        },
+        autoOpen: false,
+        modal: true,
+        dialogClass: 'workerPopup',
+        buttons: {
+            'Accept': function () {
+                wName = $("#name2").val();
+                valid = true;
+                if (wName == "" || wName == null) {
+                    document.getElementById("error").innerHTML = "You must enter a valid name for the worker.";
+                    valid = false;
+                }
+                for (i = 0; i < $scope.heroList.length; i++) {
+                    if ($scope.heroList[i].name == wName) {
+                        valid = false;
+                        document.getElementById("error").innerHTML = "A worker with this name already exists."
+                    }
+                }
+                if (valid) {
+                    $scope.addWorker(wName);
+
+                    $(this).dialog('close');
+                }
+
+            }
+        }
+    });
 
     $("#loading").dialog({
         closeOnEscape: false,
@@ -1550,10 +1605,53 @@
                 clearCount: 0,
                 working: false,
                 job: $scope.jobs[0],
-                academy: $scope.heroClass[0],
+                academy: $scope.heroClass[2],
                 party: false
             }
-    }   
+    }  
+    $scope.addWorker = function(heroName) {
+        var hero = $scope.heroList;
+        hero[hero.length] =
+            {
+                id: hero.length,
+                name: heroName,
+                currHealth: 100,
+                health: 100,
+                level: 1,
+                experience: 0,
+                next: 50,
+                equip: {
+                    weapon: $.extend(true, {}, $scope.weapons[0]),
+                    potions: [
+                        {
+                            id: 0,
+                            name: "Regeneration",
+                            count: 0
+                        },
+                        {
+                            id: 1,
+                            name: "Power",
+                            count: 0
+                        },
+                        {
+                            id: 2,
+                            name: "Health",
+                            count: 0
+                        }
+                    ],
+                    gold: 0,
+                    scrap: 0,
+                },
+                location: 'Home',
+                progress: 0,
+                dungeon: 0,
+                clearCount: 0,
+                working: false,
+                job: $scope.jobs[0],
+                academy: $scope.heroClass[1],
+                party: false
+            }
+    } 
 
     $scope.newHeroName = function () {
         randFirst = Math.floor(Math.random() * $scope.heroName.first.length);
@@ -2242,7 +2340,7 @@
                 $scope.activateBlueprint(2);
             }
             if (hero.level >= 10 && $scope.buildings[7].count == 0 && !($scope.buildings[7].enabled)) {
-                $scope.activateBlueprint(5);
+               // $scope.activateBlueprint(5);
             }
         }
     }
@@ -2281,11 +2379,3 @@
     }
 
 });
-/*
-     FILE ARCHIVED ON 03:38:35 Oct 27, 2016 AND RETRIEVED FROM THE
-     INTERNET ARCHIVE ON 02:55:38 Jun 27, 2017.
-     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
-
-     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
-     SECTION 108(a)(3)).
-*/

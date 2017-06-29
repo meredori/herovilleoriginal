@@ -260,7 +260,7 @@
 
                             <table class="table table-bordered" ng-hide="!filteredWorkheroList.length">
                                 <tr>
-                                    <td><u><b>Working Heroes</b></u></td>
+                                    <td><u><b>Workers</b></u></td>
                                 </tr>
                                 <tr>
                                     <td><u>Name</u></td>
@@ -387,25 +387,7 @@
                                 </tr>
                             </table>
                             </div>
-                        <div class="col-lg-6">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <td>Classes</td>
-                                </tr>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Level</td>
-                                    <td>Profession</td>
-                                </tr>
-                                <tr ng-repeat="acHero in filteredAcademyHero = (heroList | filter: greaterThan('level', 2)) | filter:{academy:heroClass[0]}">
-                                    <td>{{acHero.name}}</td>
-                                    <td>{{acHero.level}}</td>
-                                    <td>
-                                        <select class="span17" ng-init="selectedClass = heroClass[1]" ng-model='selectedClass' ng-options="hClass.name for hClass in heroClass"></select>
-                                        <button ng-click="heroClassChange(selectedClass.id, acHero.id)">Change</button>
-                                    </td>
-                                </tr>
-                            </table>
+                        <div class="col-lg-6">                           
                             </div>
 </section>
 
@@ -505,14 +487,14 @@
             <div class="footer navbar-fixed-bottom">
                 <div class="container" id="support">
                     <a href="" ng-click="showVersion()">Version {{version}}</a>
-                    Meredori &copy; 2014
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KWC55P8UFP3AN" target="_blank">
+                    Meredori &copy; 2017
+                    <a id="paypal" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KWC55P8UFP3AN" target="_blank">
                         <img src="images/paypal.png" style="width:35px" />
                     </a>
-                    <a href="http://www.reddit.com/r/heroville/" target="_blank">
+                    <a id="reddit" href="http://www.reddit.com/r/heroville/" target="_blank">
                         <img src="images/reddit.png" style="width:35px" />
                     </a>
-                    <a href="http://www.patreon.com/meredori" target="_blank">
+                    <a id="patreon" href="http://www.patreon.com/meredori" target="_blank">
                         <img src="images/patreon.png" style="width:35px" />
                     </a>
                 </div>
@@ -523,28 +505,28 @@
 
     <!--Extra Stuff-->
     <div id="dialog" title="New Hero"><div id="error"></div>Enter a name for the hero. <input type="text" name="name" id="name"/></div>
-    <div id="version" title="Version Information">Current Version: 1.1.1 <br /> 
+    <div id="dialog2" title="New Worker"><div id="error"></div>Enter a name for the worker. <input type="text" name="name2" id="name2"/></div>
+    <div id="version" title="Version Information">Current Version: 1.2 - 29 June 2017 <br /> 
         <div id="confirm" title="Confirmation Required">
             This change is permenant, are you sure this is what you want to do?
         </div>
     <ul >
         <li>Halved cost of Potion, Camp and Weapons to allow faster progression/less clicks</li>
+        <li>Add a new building Work Hut to replace the ability of assigning heroes as workers</li>
+        <li>Removed Academy until it is implemented better</li>
     </ul>
     </div>
     <div id="loading" title="Old Version">You are loading from an old version, there may be errors. If the game does not load correctly try starting a new game by refreshing the page and canceling this dialog. Do you want to load the old save?</div>
-    <script>
-    (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date(); a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-2206167-3', 'auto');
-    ga('send', 'pageview');
+  ga('create', 'UA-2206167-3', 'auto');
+  ga('send', 'pageview');
 
-    </script>
-
+</script>
 
 
 
