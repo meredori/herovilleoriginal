@@ -2,7 +2,7 @@
     
     //DEBUG
     $scope.debugging = false;
-    $scope.forceReset = true;
+    $scope.forceReset = false;
 
     //Initial Variables
     $scope.panel = ["Welcome to Heroville, I will be your guide while you play. (Skip in Options/Help)"];
@@ -30,7 +30,7 @@
     $scope.goldMulti = 1;
 
     //Display Variables
-    $scope.version = '1.2';
+    $scope.version = '1.3';
     $scope.optionsSuccess = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     $scope.optionsLoss = [1, 2, 3, 4];
     $scope.sorting = {
@@ -428,11 +428,6 @@
         }
     ]
 
-    //List of potions with "type" 1: After Combat, 2: On Hero Damage, 3: On Enemy damage
-    $scope.potions = [
-        
-    ]
-
     $scope.upgrades = [
         {
             id: 0,
@@ -456,6 +451,66 @@
             id: 3,
             name: 'Bonus Resources III',
             price: 20,
+            enabled: false
+        },
+        {
+            id: 4,
+            name: 'Bonus Resources IV',
+            price: 80,
+            enabled: false
+        },
+        {
+            id: 5,
+            name: 'Bonus Resources V',
+            price: 350,
+            enabled: false
+        },
+        {
+            id: 6,
+            name: 'Bonus Resources VI',
+            price: 1000,
+            enabled: false
+        },
+        {
+            id: 7,
+            name: 'Bonus Resources VII',
+            price: 4000,
+            enabled: false
+        },
+        {
+            id: 8,
+            name: 'Bonus Resources VIII',
+            price: 15000,
+            enabled: false
+        },
+        {
+            id: 9,
+            name: 'Bonus Resources IX',
+            price: 45000,
+            enabled: false
+        },
+        {
+            id: 10,
+            name: 'Bonus Resources X',
+            price: 100000,
+            enabled: false
+        },
+        {
+            id: 11,
+            name: 'Potion Capacity',
+            price: 100,
+            enabled: false
+        },
+        {
+            id: 12,
+            name: 'Potion Capacity II',
+            price: 500,
+            enabled: false
+        },
+        {
+            id: 13,
+            name: 'Potion Capacity III',
+            price: 2000,
             enabled: false
         }
 
@@ -503,27 +558,38 @@
         working: 0
     }
 
+//List of potions with "type" 1: After Combat, 2: On Hero Damage, 3: On Enemy damage, 4: Start of Dungeon
     $scope.potions = [
         {
             id: 0,
             name: "Regeneration",
             count: 0,
             maxCount: 5,
-            maxHero: 10
+            maxHero: 10,
+            type: 3,
+            cost: 100,
+            active: false
+
         },
         {
             id: 1,
             name: "Power",
             count: 0,
             maxCount: 5,
-            maxHero: 10
+            maxHero: 10,
+            type: 2,
+            cost: 100,
+            active: false
         },
         {
             id: 2,
             name: "Health",
             count: 0,
             maxCount: 5,
-            maxHero: 10
+            maxHero: 10,
+            type: 1,
+            cost: 100,
+            active: false
         }
     ]
 
@@ -810,6 +876,9 @@
 
                         $scope.buildings[3].enabled = false;
                     }
+                    if($scope.buildings[3].count % 3 == 0){
+                        $scope.jobs[2].limit++;
+                    }
                     $scope.jobs[2].enabled = true;
                     break;
                 }
@@ -826,6 +895,16 @@
                 }
                     //Build Alchemist
                 case 5: {
+                        if ($scope.buildings[5].count + 1 < $scope.potions.length) {
+                        $scope.potions[$scope.buildings[5].count].enabled = true;
+                    }
+                    else {
+                        $scope.weapons[$scope.buildings[5].count].enabled = true;
+                        $scope.buildings[5].enabled = false;
+                    }
+                    if($scope.buildings[5].count % 3 == 0){
+                        $scope.jobs[1].limit++;
+                    }
 
                     break;
                 }
@@ -1872,6 +1951,7 @@ $(document).ready(function(){
             low: "Gold;g;" + parseInt($scope.bosses[bossID].value * multi)
         }]
         $scope.startFight(bossBattle.slice(), journey, true);
+        $scope.clearPotions();
     }
 
     $scope.startFight = function(monList, journey, boss) {
@@ -1962,7 +2042,7 @@ $(document).ready(function(){
                 hero[i].currHealth = 0;
                 hero[i].progress = "Resting";
                 hero[i].equip.weapon = $.extend(true, {}, $scope.weapons[0]);
-                hero[i].equip.potion = [];
+                $scope.clearPotions();
                 if ($scope.buildings[0].tier == 1) {
                     hero[i].experience = 0;
                     hero[i].equip.scrap = 0;
@@ -1993,12 +2073,23 @@ $(document).ready(function(){
         }
     }      
 
+    $scope.clearPotions = function(hero){
+        for (i=1; i < hero.potions.length; i++){
+            if(hero.potions[i].active){
+                hero.potions[i].amount--;
+            }
+        }
+    }
+
     // Hero/ turn during battle
     $scope.heroTurn = function(heroL, enemyL) {
         var damage = 0;
         $scope.debugLog("Arrived in heroTurn");
         for (i = 0; i < heroL.length; i++) {
             if (heroL[i].currHealth > 0) {
+                if(heroL[i].potions[0].active){
+                    heal(heroL[i], 2, 1);
+                }
                 damage += $scope.heroDamage(heroL[i]);
             }
             $scope.debugLog("Doing " + damage + " damage");
@@ -2030,17 +2121,16 @@ $(document).ready(function(){
         if (hero.equip.weapon.id != $scope.weapons[0].id) {
 
             if (hero.equip.weapon.durability <= 0) {
-                    hero.equip.weapon = $.extend(true, {}, $scope.weapons[0]);
-                    return hero.equip.weapon.minDamage * $scope.damageMulti;
-                
+                    hero.equip.weapon.minDamage = Math.ceil(hero.equip.weapon.minDamage/2);
+                    hero.equip.weapon.maxDamage = Math.ceil(hero.equip.weapon.maxDamage/2);
             }
-
             else {
-                var min = hero.equip.weapon.minDamage;
-                var max = hero.equip.weapon.maxDamage;
-                var damage = (Math.floor(Math.random() * (max - min + 1))) + min;
                 hero.equip.weapon.durability--;
             }
+            var min = hero.equip.weapon.minDamage;
+            var max = hero.equip.weapon.maxDamage;
+            var damage = (Math.floor(Math.random() * (max - min + 1))) + min;
+            
             return damage * $scope.damageMulti;
         }
         else {
@@ -2253,13 +2343,22 @@ $(document).ready(function(){
                         }
                         break;
                     }
-                    case 2: {
-                        $scope.incr++;
-                        $scope.upgrades[3].enabled = true;
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                     {
+                        $scope.incr = $scope.incr*2;
+                        $scope.upgrades[upgradeID+1].enabled = true;
                         break;
                     }
-                    case 3: {
-                        $scope.incr += 2;
+                    case 10:
+                    {
+                        $scope.incr = $scope.incr*2;
                         break;
                     }
                 }
