@@ -1,8 +1,8 @@
 ﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile) {
     
     //DEBUG
-    $scope.debugging = false;
-    $scope.forceReset = false;
+    $scope.debugging = true;
+    $scope.forceReset = true;
 
     //Initial Variables
     $scope.panel = ["Welcome to Heroville, I will be your guide while you play. (Skip in Options/Help)"];
@@ -568,7 +568,8 @@
             maxHero: 10,
             type: 3,
             cost: 100,
-            active: false
+            active: false,
+            value: 2
 
         },
         {
@@ -579,7 +580,8 @@
             maxHero: 10,
             type: 2,
             cost: 100,
-            active: false
+            active: false,
+            value: 1.5
         },
         {
             id: 2,
@@ -589,7 +591,30 @@
             maxHero: 10,
             type: 1,
             cost: 100,
-            active: false
+            active: false,
+            value: 50
+        },
+        {
+            id: 3,
+            name: "Good Health",
+            count: 0,
+            maxCount: 5,
+            maxHero: 10,
+            type: 1,
+            cost: 100,
+            active: false,
+            value: 100
+        },
+        {
+            id: 4,
+            name: "Greater Health",
+            count: 0,
+            maxCount: 5,
+            maxHero: 10,
+            type: 1,
+            cost: 100,
+            active: false,
+            value: 200
         }
     ]
 
@@ -899,7 +924,7 @@
                         $scope.potions[$scope.buildings[5].count].enabled = true;
                     }
                     else {
-                        $scope.weapons[$scope.buildings[5].count].enabled = true;
+                        $scope.potions[$scope.buildings[5].count].enabled = true;
                         $scope.buildings[5].enabled = false;
                     }
                     if($scope.buildings[5].count % 3 == 0){
@@ -1662,16 +1687,26 @@ $(document).ready(function(){
                         {
                             id: 0,
                             name: "Regeneration",
-                            count: 0
+                            count: 0,
                         },
                         {
                             id: 1,
                             name: "Power",
-                            count: 0
+                            count: 0,
                         },
                         {
                             id: 2,
                             name: "Health",
+                            count: 0
+                        },
+                        {
+                            id: 3,
+                            name: "Good Health",
+                            count: 0
+                        },
+                        {
+                            id: 4,
+                            name: "Great Health",
                             count: 0
                         }
                     ],
@@ -1705,16 +1740,26 @@ $(document).ready(function(){
                         {
                             id: 0,
                             name: "Regeneration",
-                            count: 0
+                            count: 0,
                         },
                         {
                             id: 1,
                             name: "Power",
-                            count: 0
+                            count: 0,
                         },
                         {
                             id: 2,
                             name: "Health",
+                            count: 0
+                        },
+                        {
+                            id: 3,
+                            name: "Good Health",
+                            count: 0
+                        },
+                        {
+                            id: 4,
+                            name: "Great Health",
                             count: 0
                         }
                     ],
@@ -1950,8 +1995,7 @@ $(document).ready(function(){
             high: "Junk;j;" + parseInt($scope.bosses[bossID].value * multi * 3),
             low: "Gold;g;" + parseInt($scope.bosses[bossID].value * multi)
         }]
-        $scope.startFight(bossBattle.slice(), journey, true);
-        $scope.clearPotions();
+        $scope.startFight(bossBattle.slice(), journey, true);      
     }
 
     $scope.startFight = function(monList, journey, boss) {
@@ -1963,7 +2007,20 @@ $(document).ready(function(){
             experience: 0,
             boss: boss
         }
+        $scope.activatePotions(journey.hero);
         $scope.takeTurn($scope.battles[thisBattle], journey);
+    }
+
+    $scope.activatePotions = function(hero){
+        for(i=0;i<hero.length;i++){
+        if(hero[i].equip.potions[0].count > 0){
+            hero[i].equip.potions[0].active = true;
+        }
+        if(hero[i].equip.potions[1].count >0){
+            hero[i].equip.potions[1].active = true;
+        }
+        }
+
     }
 
     $scope.takeTurn = function(battle, journey) {
@@ -1982,6 +2039,9 @@ $(document).ready(function(){
         if (!$scope.monstersAlive(monstersList)) {
             // Win/ battle what happens?
             $scope.gameStats.wins++;
+            for(i=1;i<hero.length;i++){
+                $scope.clearPotions(hero[i]);
+            }
             for (j = 0; j < monstersList.length; j++) {
                 for (i = 0; i < hero.length; i++) {
                     if (hero[i].level <= (journey.dungeon.level * 2)) {
@@ -2042,7 +2102,7 @@ $(document).ready(function(){
                 hero[i].currHealth = 0;
                 hero[i].progress = "Resting";
                 hero[i].equip.weapon = $.extend(true, {}, $scope.weapons[0]);
-                $scope.clearPotions();
+                $scope.clearPotions(hero[i]);
                 if ($scope.buildings[0].tier == 1) {
                     hero[i].experience = 0;
                     hero[i].equip.scrap = 0;
@@ -2074,9 +2134,9 @@ $(document).ready(function(){
     }      
 
     $scope.clearPotions = function(hero){
-        for (i=1; i < hero.potions.length; i++){
-            if(hero.potions[i].active){
-                hero.potions[i].amount--;
+        for (i=1; i < hero.equip.potions.length; i++){
+            if(hero.equip.potions[i].active){
+                hero.equip.potions[i].amount--;
             }
         }
     }
@@ -2087,8 +2147,8 @@ $(document).ready(function(){
         $scope.debugLog("Arrived in heroTurn");
         for (i = 0; i < heroL.length; i++) {
             if (heroL[i].currHealth > 0) {
-                if(heroL[i].potions[0].active){
-                    heal(heroL[i], 2, 1);
+                if(heroL[i].equip.potions[0].active){
+                    heal(heroL[i], $scope.potions[0].value, 1);
                 }
                 damage += $scope.heroDamage(heroL[i]);
             }
@@ -2130,8 +2190,11 @@ $(document).ready(function(){
             var min = hero.equip.weapon.minDamage;
             var max = hero.equip.weapon.maxDamage;
             var damage = (Math.floor(Math.random() * (max - min + 1))) + min;
-            
-            return damage * $scope.damageMulti;
+            var heroDamageMulti = 1;
+            if(hero.equip.potions[1].active == true){
+                heroDamageMulti = 1.5;
+            }
+            return Math.ceil(damage * $scope.damageMulti * heroDamageMulti);
         }
         else {
             return 1 * $scope.damageMulti;
@@ -2182,6 +2245,19 @@ $(document).ready(function(){
                 }
                 $scope.debugLog("Taking " + turnDamage + " damage");
                 hero[k].currHealth -= heroDamage;
+                if(hero[k].equip.potions[4].count > 0 && hero[k].health - hero[k].currHealth > $scope.potions[4].value){
+                    hero[k].equip.potions[4].count--;
+                    heal(k,$scope.potions[4].value);
+                }
+                else if(hero[k].equip.potions[3].count > 0 && hero[k].health - hero[k].currHealth > $scope.potions[3].value){
+                    hero[k].equip.potions[3].count--;
+                    heal(k,$scope.potions[3].value);
+                }
+                else if(hero[k].equip.potions[2].count > 0 && hero[k].health - hero[k].currHealth > $scope.potions[2].value){
+                    hero[k].equip.potions[2].count--;
+                    heal(k,$scope.potions[2].value);
+                }
+                
             }
             
         }

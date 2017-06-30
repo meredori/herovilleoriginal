@@ -306,10 +306,10 @@
                                     <td>{{potion.sellPrice}}</td>
                                     <td><button ng-click="create(-1)" id="potionButt">{{potion.progress}}</button></td>
                                 </tr>
-                                <tr ng-repeat="acc in filteredAcc = (accessories | filter:{enabled:true})">
+                                <tr ng-repeat="acc in filteredAcc = (potions | filter:{enabled:true})">
                                     <td><img ng-src="images/{{acc.image}}" />{{acc.name}}</td>
                                     <td>{{acc.description}}</td>
-                                    <td>{{acc.count}}/{{potion.maxCount}}</td>
+                                    <td>{{acc.count}}/{{acc.maxCount}}</td>
                                     <td>{{acc.cost}}</td>
                                     <td>{{acc.prodTime}}</td>
                                     <td>{{acc.sellPrice}}</td>
