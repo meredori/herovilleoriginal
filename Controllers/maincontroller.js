@@ -254,7 +254,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [0]
+            heroClass: [0],
+            broken: false
         },
         {
             id: 1,
@@ -271,7 +272,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [0, 2]
+            heroClass: [0, 2],
+            broken: false
         },
         {
             id: 2,
@@ -288,7 +290,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 3,
@@ -305,7 +308,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 4,
@@ -322,7 +326,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 5,
@@ -339,7 +344,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 6,
@@ -356,7 +362,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 7,
@@ -373,7 +380,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 8,
@@ -390,7 +398,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 9,
@@ -407,7 +416,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         },
         {
             id: 10,
@@ -424,7 +434,8 @@
             count: 0,
             maxCount: 5,
             working: 0,
-            heroClass: [2]
+            heroClass: [2],
+            broken: false
         }
     ]
 
@@ -563,58 +574,88 @@
         {
             id: 0,
             name: "Regeneration",
+            image: "P_Green02.png",
+            description: "Restores 2% Health each turn during the fight",
+            prodTime: 5,
+            progress: "Create Regeneration Potion",
+            sellPrice: 3,
             count: 0,
             maxCount: 5,
             maxHero: 10,
             type: 3,
             cost: 100,
             active: false,
-            value: 2
+            value: 2,
+        working: 0
 
         },
         {
             id: 1,
             name: "Power",
+            image: "P_ORange02.png",
+            description: "Multiplies damage by 1.5 for one fight",
+            prodTime: 5,
+            progress: "Create Power Potion",
+            sellPrice: 4,
             count: 0,
             maxCount: 5,
             maxHero: 10,
             type: 2,
             cost: 100,
             active: false,
-            value: 1.5
+            value: 1.5,
+        working: 0
         },
         {
             id: 2,
             name: "Health",
+            image: "P_Red02.png",
+            description: "Restores 50 Health when consumed",
+            prodTime: 5,
+            progress: "Create Health Potion",
+            sellPrice: 5,
             count: 0,
             maxCount: 5,
             maxHero: 10,
             type: 1,
             cost: 100,
             active: false,
-            value: 50
+            value: 50,
+        working: 0
         },
         {
             id: 3,
             name: "Good Health",
+            image: "P_Red03.png",
+            description: "Restores 100 Health when consumed",
+            prodTime: 5,
+            progress: "Create Good Health Potion",
+            sellPrice: 8,
             count: 0,
             maxCount: 5,
             maxHero: 10,
             type: 1,
             cost: 100,
             active: false,
-            value: 100
+            value: 100,
+        working: 0
         },
         {
             id: 4,
             name: "Greater Health",
+            image: "P_Red01.png",
+            description: "Restores 200 Health when consumed",
+            prodTime: 5,
+            progress: "Create Greater Health Potion",
+            sellPrice: 15,
             count: 0,
             maxCount: 5,
             maxHero: 10,
             type: 1,
             cost: 100,
             active: false,
-            value: 200
+            value: 200,
+        working: 0
         }
     ]
 
@@ -689,6 +730,7 @@
             blueprints: $scope.blueprints,
             heroList: $scope.heroList,
             weapons: $scope.weapons,
+            potions: $scope.potions,
             upgrades: $scope.upgrades,
             journeys: $scope.journeys,
             bossBattle: $scope.bossBattle,
@@ -760,6 +802,9 @@
             $scope.weapons[i].maxCount = data.weapons[i].maxCount;
             $scope.weapons[i].enabled = data.weapons[i].enabled;
             $scope.weapons[i].working = 0;
+        }
+        for(i=0; i <data.potions.length; i++){
+            $scope.potions[i].enabled = data.potions[i].enabled
         }
         $scope.potion = data.potion;
         $scope.potion.working = 0;
@@ -921,7 +966,7 @@
                     //Build Alchemist
                 case 5: {
                         if ($scope.buildings[5].count + 1 < $scope.potions.length) {
-                        $scope.potions[$scope.buildings[5].count].enabled = true;
+                        $scope.potions[$scope.buildings[5].count-1].enabled = true;
                     }
                     else {
                         $scope.potions[$scope.buildings[5].count].enabled = true;
@@ -2179,14 +2224,17 @@ $(document).ready(function(){
 
     $scope.heroDamage = function(hero) {
         if (hero.equip.weapon.id != $scope.weapons[0].id) {
-
+            if(hero.equip.weapon.broken == false){
             if (hero.equip.weapon.durability <= 0) {
                     hero.equip.weapon.minDamage = Math.ceil(hero.equip.weapon.minDamage/2);
                     hero.equip.weapon.maxDamage = Math.ceil(hero.equip.weapon.maxDamage/2);
+                    hero.equip.weapon.broken = true;
             }
             else {
                 hero.equip.weapon.durability--;
             }
+            }
+
             var min = hero.equip.weapon.minDamage;
             var max = hero.equip.weapon.maxDamage;
             var damage = (Math.floor(Math.random() * (max - min + 1))) + min;
