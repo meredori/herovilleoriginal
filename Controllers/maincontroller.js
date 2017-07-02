@@ -1,5 +1,4 @@
-﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile) {
-    
+﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial) {
     //DEBUG
     $scope.debugging = false;
     $scope.forceReset = true;
