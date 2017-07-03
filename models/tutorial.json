@@ -1,0 +1,28 @@
+[
+    {
+        "id":0,
+        "text": ["You have been granted control of a new town in an unexplored region of the world. Your job is to attract heroes from all over the land to adventure, work and more importantly spend their gold."],
+        "button": true
+    },
+    {
+        "id":1,
+        "text": ["To start off you need to begin by gathering the initial resources so that you can build a Tent to attract your first hero. Click the 'Gather' button until you have enough resources to buy a tent. (5 resources)"],
+        "button": false
+    },
+    {
+        "id" : 2,
+        "text": ["Alright, now click the 'Improve Tent' button to purchase a tent and unlock your first hero. Your heroes name does not affect their playstyle, feel free to name them whatever you want or just keep the default name."],
+        "button": false
+    },
+    {
+        "id" : 3,
+        "text": ["To start off you need to begin by gathering the initial resources so that you can build a Tent to attract your first hero. Click the 'Gather' button until you have enough resources to buy a tent. (5 resources)"],
+        "button": false
+    },
+    {
+        "id" : 4,
+        "text": ["To start off you need to begin by gathering the initial resources so that you can build a Tent to attract your first hero. Click the 'Gather' button until you have enough resources to buy a tent. (5 resources)"],
+        "button": false
+    }
+    
+]

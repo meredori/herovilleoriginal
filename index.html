@@ -8,6 +8,7 @@
     <script src="Scripts/jquery-2.1.1.min.js"></script>
     <script src="Scripts/jquery-ui-1.10.4.min.js"></script>
     <script src="app.js"></script>
+    <script src="services/tutorialservice.js"></script>
     <script src="Controllers/maincontroller.js"></script>
     <script src="bootstrap.min.js"></script>    
     <script src="ui-bootstrap-tpls.min.js"></script>
@@ -28,12 +29,12 @@
                                 <b>{{panel[0]}}</b>
                                 <hr />
                             </li>                          
-                            <li ng-repeat="lines in panel track by $index" ng-if="panel.indexOf(lines) > 0">
+                            <li ng-repeat="lines in tutorial.text track by $index">
                                 {{lines}}
                             </li>
                         </ul>
                         <br />
-                        <div id="infoButtonDiv"><div id="infobutton" ng-click="nextTutorial()" ng-show="showTutorial">Next</div></div>
+                        <div id="infoButtonDiv"><div id="infobutton" ng-click="nextTutorial()" ng-show="tutorial.button">Next</div></div>
                     </div>
                 </div>
             </div>
