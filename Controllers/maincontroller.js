@@ -1,7 +1,7 @@
 ﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile) {
     
     //DEBUG
-    $scope.debugging = true;
+    $scope.debugging = false;
     $scope.forceReset = true;
 
     //Initial Variables
