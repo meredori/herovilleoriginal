@@ -1,4 +1,4 @@
-﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial) {
+﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, save) {
     //DEBUG
     $scope.debugging = false;
     $scope.forceReset = true;
@@ -871,132 +871,7 @@
     //function to Incrmeent the current building
 
     $scope.incrBuilding = function (building) {
-        if ($scope.decResources(building.cost)) {
-            building.count++;
-            building.cost = Math.ceil(building.cost + Math.pow((building.count + 1), building.multiplier));
-            if (building.id == 0 && $scope.buildings[1].enabled == false) {
-                //Enable Town Hall
-                $scope.buildings[1].enabled = true;
-                $scope.buildings[6].enabled = true;
-                //Activate First Dungeon
-                $scope.activateDungeon();
-                $scope.createMonster(1);
-            }
-            switch (building.id) {
-                //Building Tent
-                case 0: {
-                    $("#dialog").dialog("open");
-                    $scope.heroEnabled = false;
-                    if (building.count == 5) {
-                        $scope.activateBlueprint(3);
-                    }
-                    tutorial.completeStep(2);
-                    break;
-                }
-                    // Building Stockpile
-                case 1: {
-                    var multip = building.cost;                    
-                    $scope.maxResources = building.cost + Math.floor(building.cost / 10);
-                    $scope.maxGold = Math.floor(building.cost / 10);
-                    if ($scope.buildings[2].count == 0) {
-                        $scope.buildings[2].enabled = true;
-                        $scope.prodEnabled = false;
-                        $scope.jobs[1].enabled = true;
-                    }
-                    else if ($scope.buildings[4].count == 0) {
-                        $scope.activateBlueprint(2);
-                    }
-                    if ($scope.panelNumber == 6) {
-                        $scope.nextTutorial();
-                    }
-                    break;
-                }
-                    //Building Market
-                case 2: {
-                    if (!$scope.buildings[3].enabled) {
-                        $scope.blueprints[0].enabled = true;
-                        $scope.buildings[2].enabled = false;
-                        if ($scope.panelNumber == 13) {
-                            $scope.nextTutorial();
-                        }
-                    }
-                    break;
-                }
-                    //Building Blacksmith
-                case 3: {
-                    if ($scope.buildings[3].count + 1 < $scope.weapons.length) {
-                        $scope.weapons[$scope.buildings[3].count].enabled = true;
-                        if ($scope.panelNumber == 15) {
-                            $scope.nextTutorial();
-                        }
-                    }
-                    else {
-                        $scope.weapons[$scope.buildings[3].count].enabled = true;
-
-                        $scope.buildings[3].enabled = false;
-                    }
-                    if($scope.buildings[3].count % 3 == 0){
-                        $scope.jobs[2].limit++;
-                    }
-                    $scope.jobs[2].enabled = true;
-                    break;
-                }
-                    //Build Tavern
-                case 4: {
-                    $scope.buildings[4].enabled = false;
-                    $scope.upgEnabled = false;
-                    $scope.buildings[9].enabled = true;
-
-                    if ($scope.panelNumber == 19) {
-                        $scope.nextTutorial();
-                    }
-                    break;
-                }
-                    //Build Alchemist
-                case 5: {
-                        if ($scope.buildings[5].count + 1 < $scope.potions.length) {
-                        $scope.potions[$scope.buildings[5].count-1].enabled = true;
-                    }
-                    else {
-                        $scope.potions[$scope.buildings[5].count].enabled = true;
-                        $scope.buildings[5].enabled = false;
-                    }
-                    if($scope.buildings[5].count % 3 == 0){
-                        $scope.jobs[1].limit++;
-                    }
-
-                    break;
-                }
-                    //Build Dungeon
-                case 6: {
-                    if ($scope.dungeons.length < 14) {
-                        $scope.activateDungeon();
-                        if ($scope.panelNumber == 11) {
-                            $scope.nextTutorial();
-                        }
-                    }
-                    else {
-                        
-                        $scope.activateDungeon();
-                        $scope.activateBlueprint(4);
-                        $scope.buildings[6].enabled = false;
-                    }
-                    break;
-                }
-                    //Build Bestiary
-                case 7: {
-                    $scope.buildings[7].enabled = false;
-                }
-                case 9: {
-                    $("#dialog2").dialog("open");
-                }
-            }
-
-
-        }
-        else {
-            $scope.showError("You do not have enough Resources");
-        }
+            building.upgrade(building);
     }
 
     $scope.incrBlueprint = function (blueprint) {
@@ -1060,9 +935,7 @@
             if ($scope.potion.count + $scope.potion.working < $scope.potion.maxCount) {
 
                 if ($scope.resources >= $scope.potion.cost) {
-                    if ($scope.panelNumber == 7) {
-                        $scope.nextTutorial();
-                    }
+                    tutorial.completeStep(6);
                     $('#potionButt').attr('disabled', 'disabled');
                     $scope.resources -= $scope.potion.cost;
                     $scope.potion.working++;
