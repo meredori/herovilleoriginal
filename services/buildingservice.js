@@ -1,18 +1,17 @@
-app.factory('building', function ($http, resource, game, blueprint, tutorial, items, heroes) {
+app.factory('building', function ($http, resources, game, blueprint, tutorial, items, heroes, dungeons) {
     building = {};
     building.buildingList = null;
+    building.fullBuilding = [];
 
-    building.upgrade = function (id) {
-        if (resource.purchase(building.cost(id))) {
-            var currB = getBuilding(id);
-            var b = game.buildings[id];
-            if(currB.single){
+    building.upgrade = function (b){
+        if (resources.purchase(building.cost(b))) {
+            if(b.single){
                 game.buildings.splice(id,1);
             }
             else {
-               game.buildings[id].count++;     
+               game.buildings[b.id].count++;     
             }                       
-            switch (id) {
+            switch (b.id) {
                 //Building Tent
                 case 0: {
                     $("#dialog").dialog("open");
@@ -20,6 +19,7 @@ app.factory('building', function ($http, resource, game, blueprint, tutorial, it
                         blueprint.activateBlueprint(3);
                     }
                     tutorial.completeStep(2);
+                    dungeons.initialize();
                     break;
                 }
                 // Building Stockpile
@@ -50,78 +50,76 @@ app.factory('building', function ($http, resource, game, blueprint, tutorial, it
                 }
                 //Build Tavern
                 case 4: {
-                    $scope.buildings[4].enabled = false;
                     $scope.upgEnabled = false;
-                    $scope.buildings[9].enabled = true;
-
-                    if ($scope.panelNumber == 19) {
-                        $scope.nextTutorial();
-                    }
+                    getBuilding(9);
+                    tutorial.completeStep(18);
                     break;
                 }
                 //Build Alchemist
                 case 5: {
-                    if ($scope.buildings[5].count + 1 < $scope.potions.length) {
-                        $scope.potions[$scope.buildings[5].count - 1].enabled = true;
+                    if (b.count == items.weapons.length) {
+                        game.buildings.splice(id,1);
                     }
-                    else {
-                        $scope.potions[$scope.buildings[5].count].enabled = true;
-                        $scope.buildings[5].enabled = false;
-                    }
-                    if ($scope.buildings[5].count % 3 == 0) {
-                        $scope.jobs[1].limit++;
+                    if (b.count % 3 == 0) {
+                        heroes.jobs[1].limit++;
                     }
 
                     break;
                 }
                 //Build Dungeon
                 case 6: {
+                    dungeons.activateDungeon();
                     if ($scope.dungeons.length < 14) {
-                        $scope.activateDungeon();
-                        if ($scope.panelNumber == 11) {
-                            $scope.nextTutorial();
-                        }
+                        dungeons.activateDungeon();
+                        tutorial.completeStep(10);
                     }
                     else {
-
-                        $scope.activateDungeon();
-                        $scope.activateBlueprint(4);
-                        $scope.buildings[6].enabled = false;
+                        blueprint.activateBlueprint(4);
+                        game.buildings.splice(id,1);
                     }
                     break;
                 }
                 //Build Bestiary
                 case 7: {
-                    $scope.buildings[7].enabled = false;
+                    //nothing here
+                    break;
                 }
+                //Build Academy (Disabled)
+                case 8: {
+                    //nothing here
+                    break;
+                }
+                //Build Work Hut
                 case 9: {
                     $("#dialog2").dialog("open");
+                    break;
                 }
             }
         }
     }
 
-    building.cost = function (id) {
-        var b = building.buildingList[id];
-        var currentB = getBuilding(id);
-        c = Math.ceil(b.cost + Math.pow((currentB.count + 1), b.multiplier));
-        return c;
+    building.cost = function (b) {
+        var currC = b.cost;
+        c = Math.ceil(b.cost + Math.pow((b.count + 1), b.multiplier));
+        game.buildings[b.id].cost = c;
+        return currC;
     }
 
     getBuilding = function (id) {
-        if (game.buildings.find(id)) {
-            return game.buildings[id];
+        currBuild = game.buildings[id];
+        if (currBuild != undefined) {
+            return currBuild;
         }
         else {
             var newbuild = {
                 id: id,
-                count: 1
+                count: 0
             }
-            game.building.push(newbuild);
-            return newbuild;
+            var fullBuild = Object.assign(newbuild,building.buildingList[id]);
+            game.buildings.push(fullBuild);
+            return fullBuild;
         }
     }
-
 
     $http.get('models/buildings.json')
         .success(function (data) {

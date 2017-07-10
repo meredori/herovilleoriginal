@@ -8,6 +8,13 @@
     <script src="Scripts/jquery-2.1.1.min.js"></script>
     <script src="Scripts/jquery-ui-1.10.4.min.js"></script>
     <script src="app.js"></script>
+    <script src="services/gameservice.js"></script>
+    <script src="services/resourceservice.js"></script>
+    <script src="services/itemservice.js"></script>
+    <script src="services/blueprintservice.js"></script>
+    <script src="services/heroservice.js"></script>
+    <script src="services/dungeonservice.js"></script>
+    <script src="services/buildingservice.js"></script>
     <script src="services/tutorialservice.js"></script>
     <script src="Controllers/maincontroller.js"></script>
     <script src="bootstrap.min.js"></script>    
@@ -84,7 +91,7 @@
                                     <th><u>Level</u></th>
                                     <th><u>Cost</u></th>
                                 </tr>
-                                <tr ng-repeat="building in buildings" ng-show="building.enabled == true">
+                                <tr ng-repeat="building in buildings">
                                     <td ng-attr-title="{{building.description}}">{{building.name}}</td>
                                     <td>{{building.count | number}}</td>
                                     <td>{{building.cost | number}}</td>
