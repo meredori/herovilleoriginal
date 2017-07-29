@@ -1,4 +1,4 @@
-﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building) {
+﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building,ui) {
     //DEBUG
     $scope.debugging = false;
     $scope.forceReset = true;
@@ -18,6 +18,20 @@
     $scope.$watch(function () { return game.buildings; }, function (data) {
         $scope.buildings = game.buildings;
     }, true);
+
+    $scope.$watch(function () { return ui; }, function (data) {
+        $scope.tabs = ui.tabs;
+    }, true);
+
+    $scope.$watch(function () { return items; }, function (data) {
+        $scope.weapons = items.weapons;
+
+    }, true);
+
+    $scope.$watch(function (){return game.heroes; }, function(data)){
+        $scope.heroList = game.heroes;
+    }
+
     $scope.$watch(function () { return dungeons; }, function (data) {
         $scope.dungeons = dungeons.dungeons;
         $scope.bosses = dungeons.bosses;
@@ -360,10 +374,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     $scope.reset = function () {
         //TODO: Add confirm dialog.
-        data = JSON.parse(localStorage["data"]);
-        data.saveVersion = "Reset";
-        localStorage["data"] = JSON.stringify(data);
-        location.reload();
+        game.reset();
     }
 
 
@@ -611,8 +622,9 @@
             if (hero.location == 'Home') {
                 if (hero.equip.gold > 0) {
                     // Upgrade Weapon
-                    if ($scope.buildings[3].count > hero.equip.weapon.id) {
-                        for (j = $scope.buildings[3].count; j > hero.equip.weapon.id; j--) {
+                    var blacksmith = building.getBuilding(3);
+                    if (blacksmith.count > hero.equip.weapon.id) {
+                        for (j = blacksmith.count; j > hero.equip.weapon.id; j--) {
                             if ($scope.meetRequirements(hero, $scope.weapons[j])) {
 
                                 if (hero.equip.gold >= $scope.weapons[j].sellPrice && $scope.weapons[j].count > 0) {
@@ -971,57 +983,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
 
     $scope.addHero = function (heroName) {
-        var hero = $scope.heroList;
-        hero[hero.length] =
-            {
-                id: hero.length,
-                name: heroName,
-                currHealth: 100,
-                health: 100,
-                level: 1,
-                experience: 0,
-                next: 50,
-                equip: {
-                    weapon: $.extend(true, {}, $scope.weapons[0]),
-                    potions: [
-                        {
-                            id: 0,
-                            name: "Regeneration",
-                            count: 0,
-                        },
-                        {
-                            id: 1,
-                            name: "Power",
-                            count: 0,
-                        },
-                        {
-                            id: 2,
-                            name: "Health",
-                            count: 0
-                        },
-                        {
-                            id: 3,
-                            name: "Good Health",
-                            count: 0
-                        },
-                        {
-                            id: 4,
-                            name: "Great Health",
-                            count: 0
-                        }
-                    ],
-                    gold: 0,
-                    scrap: 0,
-                },
-                location: 'Home',
-                progress: 0,
-                dungeon: 0,
-                clearCount: 0,
-                working: false,
-                job: $scope.jobs[0],
-                academy: $scope.heroClass[2],
-                party: false
-            }
+        heroes.addHero(heroName);
     }
     $scope.addWorker = function (heroName) {
         var hero = $scope.heroList;

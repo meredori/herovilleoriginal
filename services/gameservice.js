@@ -1,5 +1,7 @@
 app.factory('game', function ($http) {
     game = {};
+    game.heroes = [];
+    game.weapons = [];
     game.resources = 0;
     game.maxResources = 25;
     game.gold = 0;
@@ -23,6 +25,12 @@ app.factory('game', function ($http) {
         currGame = JSON.parse(localStorage["data"]);
         game.resources = currGame.resources;
         game.gold = currGame.gold;
+        game.buildings = currGame.buildings;
+    }
+
+    game.reset = function() {
+        localStorage.removeItem("data");
+        location.reload();
     }
 
     return game;

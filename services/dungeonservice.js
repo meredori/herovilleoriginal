@@ -1,12 +1,13 @@
-app.factory('dungeons', function ($http) {
+app.factory('dungeons', function ($http, logging,ui) {
     dungeons = {};
-    dungeons.dungeons = {};
-    dungeons.dungeonNames = {};
-    dungeons.monsterList = {};
-    dungeons.bosses = {};
-    dungeons.monsters = {};
+    dungeons.dungeons = [];
+    dungeons.dungeonNames = [];
+    dungeons.monsterList = [];
+    dungeons.bosses = [];
+    dungeons.monsters = [];
     dungeons.initialize = function () {
         dungeons.activateDungeon();
+        ui.tabs.hero = true;
     }
 
     dungeons.activateDungeon = function () {
@@ -67,7 +68,7 @@ app.factory('dungeons', function ($http) {
                 low: "Junk;j;" + (level * 3),
                 high: "Gold;g;" + level
             }
-            dungeons.debugLog("Created " + dungeons.monsters[(dungeons.monsters.length - 1)].name);
+            logging.debugLog("Created " + dungeons.monsters[(dungeons.monsters.length - 1)].name);
             monstersist.splice(random, 1);
         }
 
@@ -99,7 +100,7 @@ app.factory('dungeons', function ($http) {
             low: "Junk;j;" + (level * 3),
             high: "Gold;g;" + level
         }
-        dungeons.debugLog("Created " + dungeons.bosses[(dungeons.bosses.length - 1)].name);
+        logging.debugLog("Created " + dungeons.bosses[(dungeons.bosses.length - 1)].name);
         monstersist.splice(random, 1);
 
     }

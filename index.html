@@ -8,6 +8,8 @@
     <script src="Scripts/jquery-2.1.1.min.js"></script>
     <script src="Scripts/jquery-ui-1.10.4.min.js"></script>
     <script src="app.js"></script>
+    <script src="services/logservice.js"></script>
+    <script src="services/interfaceservice.js"></script>
     <script src="services/gameservice.js"></script>
     <script src="services/resourceservice.js"></script>
     <script src="services/itemservice.js"></script>
@@ -123,7 +125,7 @@
                         </div>
                     </section>
                 </tab>
-                <tab heading="Hero" id="hero" disabled="heroEnabled">
+                <tab heading="Hero" id="hero" disabled="!tabs.hero">
                     <section id="container">
                         <div class="col-lg-7">
                             <div class="btn-group" dropdown is-open="status.isopen" id="heroFilter">
