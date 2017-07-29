@@ -1,4 +1,4 @@
-﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building,ui) {
+﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building, ui) {
     //DEBUG
     $scope.debugging = false;
     $scope.forceReset = true;
@@ -37,6 +37,7 @@
         $scope.bosses = dungeons.bosses;
         $scope.monsters = dungeons.monsters;
     }, true);
+
     $scope.showTutorial = true;
     $scope.panelInfo = false;
     $scope.resources = 0;

@@ -1,4 +1,4 @@
-app.factory('heroes', function ($http,game,item) {
+app.factory('heroes', function ($http,game,items) {
     heroes = {};
     heroes.jobs = [];
     heroes.heroClass = [];
