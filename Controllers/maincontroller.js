@@ -1,4 +1,4 @@
-﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building, ui) {
+﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building, ui,blueprint) {
     //DEBUG
     $scope.debugging = false;
     $scope.forceReset = true;
@@ -12,11 +12,23 @@
         $scope.resources = game.resources;
     }, true);
 
-    $scope.$watch(function () { return game.gold; }, function (data) {
+    $scope.$watch(function () { return game.maxResources; }, function (data) {
+        $scope.maxResources = game.maxResources;
+    }, true);
+
+        $scope.$watch(function () { return game.gold; }, function (data) {
         $scope.gold = game.gold;
+    }, true);
+
+    $scope.$watch(function () { return game.maxGold; }, function (data) {
+        $scope.maxGold = game.maxGold;
     }, true);
     $scope.$watch(function () { return game.buildings; }, function (data) {
         $scope.buildings = game.buildings;
+    }, true);
+
+        $scope.$watch(function () { return blueprint.blueprintList; }, function (data) {
+        $scope.blueprints = blueprint.blueprintList;
     }, true);
 
     $scope.$watch(function () { return ui; }, function (data) {
@@ -61,7 +73,7 @@
     $scope.goldMulti = 1;
 
     //Display Variables
-    $scope.version = '1.3';
+    $scope.version = '2.0';
     $scope.optionsSuccess = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     $scope.optionsLoss = [1, 2, 3, 4];
     $scope.sorting = {

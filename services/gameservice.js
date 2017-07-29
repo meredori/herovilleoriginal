@@ -5,6 +5,7 @@ app.factory('game', function ($http) {
     game.resources = 0;
     game.maxResources = 25;
     game.gold = 0;
+    game.maxGold = 0;
     game.buildings = [
         {
             id: 0,

@@ -1,4 +1,4 @@
-app.factory('building', function ($http, resources, game, blueprint, tutorial, items, heroes, dungeons) {
+app.factory('building', function ($http, resources, game, blueprint, tutorial, items, heroes, dungeons, blueprint) {
     building = {};
     building.buildingList = null;
     building.fullBuilding = [];
@@ -6,7 +6,7 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
     building.upgrade = function (b){
         if (resources.purchase(building.cost(b))) {
             if(b.single){
-                game.buildings.splice(id,1);
+                game.buildings.splice(b.id,1);
             }
             else {
                game.buildings[b.id].count++;     
@@ -28,6 +28,8 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
                     building.getBuilding(2);
                     blueprint.activateBlueprint(2);
                     tutorial.completeStep(5);
+                    game.maxResources = b.cost + Math.floor(b.cost/10);
+                    game.maxGold = Math.floor(b.cost/10);
                     break;
                 }
                 //Building Market
@@ -126,6 +128,5 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
         .success(function (data) {
             building.buildingList = data;
         });
-
-    return building;
+        return building;
 });

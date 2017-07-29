@@ -1,10 +1,16 @@
 app.factory('blueprint', function ($http) {
     blueprint = {};
-    return blueprint;
+    blueprint.blueprintList = [];
+    
+    blueprint.activateBlueprint = function(id){
+        blueprint.blueprintList[id].enabled = true;
+    };
 
    $http.get('models/blueprints.json')
         .success(function (data) {
-            building.buildingList = data;
+            blueprint.blueprintList = data;
         });
+        
+        return blueprint;
 
 });
