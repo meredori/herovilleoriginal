@@ -16,7 +16,7 @@ app.factory('heroes', function ($http,game,items) {
                 experience: 0,
                 next: 50,
                 equip: {
-                    weapon: $.extend(true, {}, item.weapons[0]),
+                    weapon: $.extend(true, {}, items.weapons[0]),
                     potions: [
                         {
                             id: 0,
