@@ -28,9 +28,9 @@
 
     }, true);
 
-    $scope.$watch(function (){return game.heroes; }, function(data)){
+    $scope.$watch(function (){return game.heroes; }, function(data){
         $scope.heroList = game.heroes;
-    }
+    }, true);
 
     $scope.$watch(function () { return dungeons; }, function (data) {
         $scope.dungeons = dungeons.dungeons;
