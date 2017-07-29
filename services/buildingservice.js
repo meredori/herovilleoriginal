@@ -20,11 +20,12 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
                     }
                     tutorial.completeStep(2);
                     dungeons.initialize();
+                    building.getBuilding(1);
                     break;
                 }
                 // Building Stockpile
                 case 1: {
-                    getBuilding(2);
+                    building.getBuilding(2);
                     blueprint.activateBlueprint(2);
                     tutorial.completeStep(5);
                     break;
@@ -105,7 +106,7 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
         return currC;
     }
 
-    getBuilding = function (id) {
+    building.getBuilding = function (id) {
         currBuild = game.buildings[id];
         if (currBuild != undefined) {
             return currBuild;

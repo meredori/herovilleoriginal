@@ -32,7 +32,6 @@ app.factory('dungeons', function ($http, logging,ui) {
         for (i = 0; i < dungeons.dungeons.length; i++) {
             for (j = 0; j < dList.length; j++) {
                 if (dList[j] == dungeons.dungeons[i].name) {
-                    dungeons.debugLog("Removed " + dList[j]);
                     dList.splice(j, 1);
                 }
             }
