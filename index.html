@@ -14,7 +14,8 @@
     <link href="jquery-ui-1.10.0.custom.css" rel="stylesheet" />
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
-    <link href="newStyle.css" rel="stylesheet" />
+    <link href="newStyle.css" ng-if="!dark" rel="stylesheet" />
+    <link href="darkStyle.css" ng-if="dark" rel="stylesheet" />
 </head>
 <body>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
@@ -440,7 +441,7 @@
                         <button id="save" ng-click="save()">Save</button>
                         <button id="load" ng-click="load()">Load</button>
                         <button id="reset" ng-click="reset()">Reset</button>
-
+                        <button id="swap theme" ng-click="changeTheme()" value="SwapTheme"/>
                         <div id="optionMenu">
                             <accordion close-others="true">
                                 <accordion-group>
@@ -503,15 +504,13 @@
     <!--Extra Stuff-->
     <div id="dialog" title="New Hero"><div id="error"></div>Enter a name for the hero. <input type="text" name="name" id="name"/></div>
     <div id="dialog2" title="New Worker"><div id="error"></div>Enter a name for the worker. <input type="text" name="name2" id="name2"/></div>
-    <div id="version" title="Version Information">Current Version: 1.3.1 - 1 July 2017 <br /> 
+    <div id="version" title="Version Information">Current Version: 1.3.2 - 2 Oct 2017 <br /> 
         <div id="confirm" title="Confirmation Required">
             This change is permenant, are you sure this is what you want to do?
         </div>
     <ul >
-        <li>Added click upgrades to teir 10</li>
-        <li>Added potions 5 currently: Regeneration, Power and 3 Health</li>
-        <li>Weapons that lose all durability now break doing half damage as opposed to dissapearing</li>
-        <li>Removed Employ checkbox, shouldnt have been there</li>
+        <li>Fix issue with new potions not giving gold</li>
+        <li>Added Dark Theme</li>
     </ul>
     </div>
     <div id="loading" title="Old Version">You are loading from an old version, there may be errors. If the game does not load correctly try starting a new game by refreshing the page and canceling this dialog. Do you want to load the old save?</div>
