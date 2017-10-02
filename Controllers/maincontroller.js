@@ -1,6 +1,6 @@
 ﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building, ui,blueprint) {
     //DEBUG
-    $scope.debugging = false;
+    $scope.debugging = true;
     $scope.forceReset = true;
 
     //Initial Variables

@@ -23,10 +23,13 @@ app.factory('game', function ($http) {
     }
 
     game.loadGame = function () {
-        currGame = JSON.parse(localStorage["data"]);
-        game.resources = currGame.resources;
-        game.gold = currGame.gold;
-        game.buildings = currGame.buildings;
+        if(localStorage.getItem("data") != null){
+            currGame = JSON.parse(localStorage["data"]);
+            game.resources = currGame.resources;
+            game.gold = currGame.gold;
+            game.buildings = currGame.buildings;
+        }
+
     }
 
     game.reset = function() {

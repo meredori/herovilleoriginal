@@ -5,6 +5,7 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
 
     building.upgrade = function (b){
         if (resources.purchase(building.cost(b))) {
+            building.cost(b,true)
             if(b.single){
                 game.buildings.splice(b.id,1);
             }
@@ -21,6 +22,7 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
                     tutorial.completeStep(2);
                     dungeons.initialize();
                     building.getBuilding(1);
+                    building.getBuilding(6);
                     break;
                 }
                 // Building Stockpile
@@ -101,10 +103,14 @@ app.factory('building', function ($http, resources, game, blueprint, tutorial, i
         }
     }
 
-    building.cost = function (b) {
+    building.cost = function (b,update) {
         var currC = b.cost;
+        if(update){
+        
         c = Math.ceil(b.cost + Math.pow((b.count + 1), b.multiplier));
         game.buildings[b.id].cost = c;
+        
+        }
         return currC;
     }
 
