@@ -14,12 +14,13 @@
     <link href="jquery-ui-1.10.0.custom.css" rel="stylesheet" />
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
-    <link href="newStyle.css" ng-if="!dark" rel="stylesheet" />
-    <link href="darkStyle.css" ng-if="dark" rel="stylesheet" />
+
 </head>
 <body>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <div ng-app="Incremental" id="wrap" ng-controller="MainController" class="page-wrap">
+    <link href="newStyle.css" ng-if="!dark" rel="stylesheet" />
+    <link href="darkStyle.css" ng-if="dark" rel="stylesheet" />
         <div class="row">
             <div class="col-lg-4">
                 <div class="panel panel-default">
@@ -441,7 +442,7 @@
                         <button id="save" ng-click="save()">Save</button>
                         <button id="load" ng-click="load()">Load</button>
                         <button id="reset" ng-click="reset()">Reset</button>
-                        <button id="swap theme" ng-click="changeTheme()" value="SwapTheme"/>
+                        <button id="swap theme" ng-click="changeTheme()" value="SwapTheme">Swap Theme</button>
                         <div id="optionMenu">
                             <accordion close-others="true">
                                 <accordion-group>
