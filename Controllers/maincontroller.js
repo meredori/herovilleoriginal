@@ -1388,6 +1388,7 @@
                             for (k = 0; k < hero.equip.potions.length; k++) {
                                 if (hero.equip.potions[k].count < $scope.potions[k].maxHero && hero.equip.gold >= $scope.potions[k].sellPrice && $scope.potions[k].count > 0) {
                                     hero.equip.gold -= $scope.potions[k].sellPrice;
+                                    $scope.incGold($scope.potions[k].sellPrice);
                                     $scope.potions[k].count--;
                                     hero.equip.potions[k].count++;
                                 }
