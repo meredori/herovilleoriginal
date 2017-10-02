@@ -1,5 +1,5 @@
 ﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile) {
-    
+    $scope.dark=false;
     //DEBUG
     $scope.debugging = false;
     $scope.forceReset = true;
@@ -2353,6 +2353,11 @@ $(document).ready(function(){
         }
 
     }
+
+    $scope.changeTheme = function(){
+        $scope.dark=!$scope.dark;
+    }                          
+
 
     
 
