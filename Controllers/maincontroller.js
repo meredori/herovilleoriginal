@@ -1,7 +1,9 @@
+    
 ﻿app.controller("MainController", function ($scope, $interval, $timeout, $http, $compile, tutorial, game, items, resources, building, ui,blueprint) {
     //DEBUG
     $scope.debugging = true;
     $scope.forceReset = true;
+    $scope.dark=false;
 
     //Initial Variables
     $scope.$watch(function () { return tutorial; }, function (data) {
@@ -724,6 +726,21 @@
                             }
                         }
                     }
+                    for (j = 0; j < $scope.potions.length; j++) {
+                        if ($scope.potions[j].enabled && ($scope.potions[j].count + $scope.potions[j].working) < $scope.potions[j].maxCount && $scope.heroList[i].progress == "Idle") {
+                            if ($scope.resources >= $scope.potions[j].cost) {
+                                $scope.potions[j].working++;
+                                $scope.resources -= $scope.potions[j].cost;
+                                if (!($scope.heroList[i].academy.id == 1)) {
+                                    $scope.createPotions(j, false, (Math.floor((($scope.heroList[i].level) * .05) * $scope.potions[j].prodTime)), i);
+                                }
+                                else {
+                                    $scope.gainExp($scope.heroList[i], Math.ceil($scope.potions[j].prodTime / 2));
+                                    $scope.createPotions(j, false, (Math.floor((($scope.heroList[i].level) * .05) * $scope.potions[j].prodTime)), i);
+                                }
+                            }
+                        }
+                    }
                     break;
                 }
                 case 2: {
@@ -748,21 +765,7 @@
                     break;
                 }
                 case 3: {
-                    for (j = 0; j < $scope.potions.length; j++) {
-                        if ($scope.potions[j].enabled && ($scope.potions[j].count + $scope.potions[j].working) < $scope.potions[j].maxCount && $scope.heroList[i].progress == "Idle") {
-                            if ($scope.resources >= $scope.potions[j].cost) {
-                                $scope.potions[j].working++;
-                                $scope.resources -= $scope.potions[j].cost;
-                                if (!($scope.heroList[i].academy.id == 1)) {
-                                    $scope.createPotions(j, false, (Math.floor((($scope.heroList[i].level) * .05) * $scope.potions[j].prodTime)), i);
-                                }
-                                else {
-                                    $scope.gainExp($scope.heroList[i], Math.ceil($scope.potions[j].prodTime / 2));
-                                    $scope.createPotions(j, false, (Math.floor((($scope.heroList[i].level) * .05) * $scope.potions[j].prodTime)), i);
-                                }
-                            }
-                        }
-                    }
+                    
                     break;
                 }
             }
@@ -1423,7 +1426,7 @@
         for (i = 0; i < heroL.length; i++) {
             if (heroL[i].currHealth > 0) {
                 if (heroL[i].equip.potions[0].active) {
-                    heal(heroL[i], $scope.potions[0].value, 1);
+                    heal(i, $scope.potions[0].value, 1);
                 }
                 damage += $scope.heroDamage(heroL[i]);
             }
@@ -1581,6 +1584,10 @@
         }
 
     }
+
+    $scope.changeTheme = function(){
+        $scope.dark=!$scope.dark;
+    }                          
 
 
 
