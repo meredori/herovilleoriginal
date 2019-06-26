@@ -1,4 +1,4 @@
-﻿var app = angular.module('Incremental', ['ui.bootstrap', 'angulartics', 'angulartics.google.analytics']);
+﻿var app = angular.module('Incremental', ['ui.bootstrap']);
 
 app.directive('ngSlider', function () {
     return {
