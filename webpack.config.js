@@ -1,38 +1,58 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.tsx',
   plugins: [
-      new HtmlWebpackPlugin({
-          title: 'Output Management',
-      }),
+    new HtmlWebpackPlugin({
+      title: 'Heroville App',
+      template: './src/index.pug'
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css"
+    }),  
+    new LiveReloadPlugin({
+      appendScriptTag: true
+    })
   ],
+  module: {
+    rules: [
+      {
+        test: /\.pug$/,
+        use:["pug-loader"]
+      },
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.ts(x?)$/,
+        exclude: /node_modules/,
+        use: [
+            {
+                loader: "ts-loader"
+            }
+        ]
+    },
+    {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
+    }
+    ],
+  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
-   module: {
-     rules: [
-       {
-         test: /\.css$/,
-         use: [
-           'style-loader',
-           'css-loader',
-         ],
-       },
-       {
-           test: /\.(png|svg|jpg|gif)$/,
-           use: [
-               'file-loader',
-           ]
-       },
-       {
-           test: /\.(woff|woff2|eot|ttf|otf)$/,
-           use: [
-               'file-loader',
-           ]
-       }
-     ],
-   },
+  resolve: {
+    extensions: [".ts", ".tsx",".js"]
+  }
 };
