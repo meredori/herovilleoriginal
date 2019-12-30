@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+
 
 const initialState = {
     gold: 0,
@@ -21,5 +21,3 @@ export const stockpile = (state = initialState, action) => {
             return state;
     }
 }
-
-export const reducers = combineReducers({ stockpile });

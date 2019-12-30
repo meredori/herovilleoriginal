@@ -7,9 +7,8 @@ import {
   Link
 } from "react-router-dom";
 import { PersistGate } from 'redux-persist/integration/react'
-
-import {HomePage, HeroPage, SettingPage} from './layouts'
-import {store,persistor} from './stores/stockpile/store'
+import {HomePage, HeroPage, SettingsPage, GlobalElements} from './layouts'
+import {store,persistor} from './stores/store'
 
 export default function Routes() {
   return (
@@ -30,6 +29,7 @@ export default function Routes() {
                 </li>
               </ul>
             </nav>
+            <GlobalElements></GlobalElements>
             <Switch>
               <Route path="/heroes" component={HeroPage}>
               </Route>
