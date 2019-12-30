@@ -33,7 +33,7 @@ export default function Routes() {
             <Switch>
               <Route path="/heroes" component={HeroPage}>
               </Route>
-              <Route path="/settings" component={SettingPage}>
+              <Route path="/settings" component={SettingsPage}>
               </Route>
               <Route exact path="/" component={HomePage}>
               </Route>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { incrementResources, clearStorage } from '../../stores/stockpile/actions'
-
 export class BasicSettings extends React.Component {
     constructor(props){
         super(props);

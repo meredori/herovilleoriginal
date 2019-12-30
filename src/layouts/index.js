@@ -1,5 +1,5 @@
 import HomePage from './homePage'
 import HeroPage from './heroPage'
-import SettingPage from './settingPage'
+import SettingsPage from './settingPage'
 
-export { HomePage, HeroPage, SettingPage}
+export { HomePage, HeroPage, SettingsPage}
