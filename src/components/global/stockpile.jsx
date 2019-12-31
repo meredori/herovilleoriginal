@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { incrementResources, clearStorage } from '../../stores/stockpile/actions'
+import { incrementResources } from '../../stores/stockpile/actions'
 
 export class Stockpile extends React.Component {
     constructor(props){
