@@ -1,31 +1,33 @@
+import { upgradebuilding } from './helper'
+
 export const buildings = (state = initialState, action) => {
     switch(action.type){        
         case 'CLEARSTORAGE':
-            return initialState
+            return initialState;
         case 'UPGRADEBUILDING':
-            var building = state.buildings[id];
-            building.level++;
-            
+            var building = state[action.id];
+            building = upgradebuilding(building,state.resources);
+            return {...state, [action.id]: building};
         default:
-            return state
+            return state;
     }
 }
 
 const initialState = {
-    buildings:[
-        { 
-            id: 0,
-            cost: 10,
-            level: 0,
-            name: "Campfire",
-            enabled: true
-        },
-        {
-            id: 0,
-            cost: 50,
-            level: 0,
-            name: "Stockpile",
-            enabled: false
-        }
-    ]
+    0:{ 
+        id: 0,
+        cost: 10,
+        level: 0,
+        name: "Campfire",
+        enabled: true,
+        multiplier: 2
+    },
+    1:{
+        id: 1,
+        cost: 50,
+        level: 0,
+        name: "Stockpile",
+        enabled: false,
+        multiplier: 5
+    }
 }

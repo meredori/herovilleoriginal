@@ -25,6 +25,13 @@
                   }
                 }
               ]
-        }
+        },{
+          "label": "enddebug",
+          "type": "process",
+          "command":[
+             "${command:workbench.action.tasks.terminate}",
+             "${command:workbench.action.acceptSelectedQuickOpenItem}"
+          ],
+       }
     ]
 }
