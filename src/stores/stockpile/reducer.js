@@ -5,7 +5,7 @@ const initialState = {
     resources: 0,
 }
 
-export const stockpile = (state = initialState, action) => {
+export const stockpile = (action,state = initialState) => {
     switch(action.type) {
         case 'INCREMENTGOLD':
             return {...state, gold: state.gold + action.counter}

@@ -1,6 +1,6 @@
 import { upgradebuilding } from './helper'
 
-export const buildings = (state = initialState, action) => {
+export const buildings = (action,state = initialState) => {
     switch(action.type){        
         case 'CLEARSTORAGE':
             return initialState;
